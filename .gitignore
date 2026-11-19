@@ -1,0 +1,12 @@
+# Deployed site only: static runtime + original photos.
+belate-site/
+_shots/
+_delivery/
+docs/
+其他/
+追剧/
+游戏/
+烹饪/
+Belate.html
+打开 Belate.cmd
+摄影信息补填.csv

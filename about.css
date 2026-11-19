@@ -1,0 +1,607 @@
+.about-page { isolation: isolate; }
+/* 字符场背景（逆向自 MiMo Desktop 站点 hero 的 desktop-ascii）：淡墨微字环从标题向外拨开并循环涨落 */
+.about-intro { position: relative; }
+.about-ascii { position: absolute; inset: 0; z-index: 0; display: block; inline-size: 100%; block-size: 100%; pointer-events: none; will-change: transform; }
+/* 字符场开关：导航栏下方右上角，克制的低对比小拨杆；关闭=画布隐藏停帧，偏好记入本地。 */
+.about-field-switch {
+  position: absolute;
+  top: clamp(12px, 2vw, 20px);
+  right: var(--bar-edge);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 0 10px 8px;
+  background: none;
+  font-size: 11px;
+  letter-spacing: .05em;
+  color: #5c7466;
+  opacity: .72;
+  transition: opacity .3s var(--ease), color .3s var(--ease);
+}
+.about-field-switch:hover { opacity: 1; color: #33553f; }
+.about-field-switch[aria-checked="false"] { opacity: .5; }
+.about-field-track {
+  position: relative;
+  inline-size: 28px;
+  block-size: 16px;
+  border-radius: 999px;
+  background: #e6ede5;
+  box-shadow: inset 0 0 0 1px #c6d4c9;
+  transition: background .3s var(--ease);
+}
+.about-field-track::after {
+  content: '';
+  position: absolute;
+  top: 2.5px;
+  left: 2.5px;
+  inline-size: 11px;
+  block-size: 11px;
+  border-radius: 50%;
+  background: #7d9384;
+  transition: translate .3s var(--ease), background .3s var(--ease);
+}
+.about-field-switch[aria-checked="true"] .about-field-track { background: #d3e0d3; }
+.about-field-switch[aria-checked="true"] .about-field-track::after { translate: 12px 0; background: #46644e; }
+.about-intro .page-title { position: relative; z-index: 1; }
+/* 开场逐行打字：标题与导语两行都走光标打字；汉字行先出拼音字母再上屏。
+   标题字距比全站标题略松——逗号和打字留白挤在一起会糊。 */
+.page-title .about-type-title { letter-spacing: -.045em; }
+.about-type-title .about-type-text { color: inherit; }
+.about-caret {
+  display: none;
+  inline-size: 2px;
+  block-size: .8em;
+  margin-inline-start: .06em;
+  border-radius: 1px;
+  background: #4a6152;
+  vertical-align: -.02em;
+}
+.is-typing > .about-caret {
+  display: inline-block;
+  animation: about-caret-blink 1.08s step-end infinite;
+}
+.is-done > .about-caret {
+  display: inline-block;
+  opacity: 0;
+  transition: opacity .4s var(--ease);
+}
+@keyframes about-caret-blink { 50% { opacity: 0; } }
+.about-title-dot { display: inline-block; animation: about-dot-in .22s var(--ease) both; }
+@keyframes about-dot-in { from { opacity: 0; transform: translateY(-2px); } }
+/* 导语每行叠一层隐藏 ghost 占位（按最终文本撑满含折行的高度），打字内容覆盖在同一格里，排版全程不跳。 */
+.about-lead-line { display: grid; }
+.about-lead-line > * { grid-area: 1 / 1; }
+.about-lead-ghost { visibility: hidden; }
+.about-intro .page-title { margin-block-end: 0; padding-block-end: 70px; }
+.about-continuation { position: relative; z-index: 1; display: flow-root; background: var(--paper); }
+.about-continuation > .about-panorama { box-shadow: 0 -18px 42px -30px #273a3059; }
+.about-panorama img { display: block; }
+
+@media (prefers-reduced-motion: no-preference) and (min-height: 420px) {
+  .about-intro { position: sticky; top: var(--bar-height); z-index: 0; }
+}
+@media (min-width: 761px) and (min-height: 590px) {
+  .about-reading-title { position: sticky; top: calc(var(--bar-height) + 32px); align-self: start; }
+}
+@media (max-width: 760px) {
+  .about-intro .page-title { padding-block-end: 42px; }
+}
+
+/* 爱好：朋友圈式卡片流，每张卡=一个爱好块（头像/文案/链接）。 */
+.about-hobbies {
+  margin-block: clamp(4px, 2vw, 24px) clamp(58px, 8.5vw, 124px);
+}
+.about-hobbies h2 {
+  margin-block: 0 clamp(18px, 3vw, 37px);
+  font-size: clamp(25px, 3vw, 42px);
+  font-weight: 590;
+  line-height: 1.3;
+  letter-spacing: -.025em;
+}
+.hobby-feed { display: grid; gap: 30px; }
+.hobby-block { display: grid; gap: 18px; }
+.hobby-tag { margin: 0; display: flex; align-items: center; gap: 9px; min-height: 44px; font-size: 13px; font-weight: 600; letter-spacing: .12em; color: #5c7466; }
+/* 卡片类目标题不可折叠：与折叠标题同款，尖头固定向下、点击无反应。 */
+.hobby-tag .hobby-fold-arrow { rotate: 90deg; }
+.hobby-post {
+  display: grid;
+  gap: 18px;
+  padding: 24px 28px;
+}
+/* 与社交卡同一套磨砂哑光玻璃材质：渐变雾面 + 轻降饱和 + 噪点 + 跟随指针的高光。 */
+.hobby-post.frosted-glass {
+  --glass-radius: clamp(20px, 2.2vw, 28px);
+  border: 0;
+  background: linear-gradient(148deg, #f5f8f3d6, #e7eee5b8 60%, #e3eee5c4);
+  -webkit-backdrop-filter: saturate(.94);
+  backdrop-filter: saturate(.94);
+  box-shadow: 0 3px 9px -6px #293f3220,
+              0 20px 46px -25px #253f313b;
+}
+.hobby-post.frosted-glass::before {
+  background: radial-gradient(ellipse at var(--social-light-x, 38%) var(--social-light-y, 18%), #fff9, #fff3 32%, transparent 67%);
+}
+.hobby-post.frosted-glass::after { opacity: .18; }
+.hobby-head { display: flex; align-items: center; gap: 16px; }
+.hobby-avatar {
+  inline-size: 58px;
+  block-size: 58px;
+  border-radius: 13px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px #28463414;
+}
+.hobby-title { margin: 0; font-size: clamp(23px, 2.5vw, 31px); font-weight: 600; letter-spacing: -.025em; line-height: 1.25; }
+.hobby-title a { display: inline-flex; align-items: baseline; gap: 11px; color: var(--ink); }
+.hobby-title a:is(:hover, :focus-visible) { color: #3d6350; }
+.hobby-title-hint { font-size: 12px; font-weight: 500; letter-spacing: .05em; color: #5c7466; }
+.hobby-links { display: grid; gap: 10px; }
+.hobby-links a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 3px 14px;
+  padding: 13px 18px;
+  border: 1px solid #e2ebe4;
+  border-radius: 14px;
+  background: rgb(255 255 255 / .62);
+}
+.hobby-link-title { font-size: 15px; font-weight: 600; color: var(--ink); letter-spacing: -.01em; }
+.hobby-link-sub { grid-column: 1; font-size: 12px; color: var(--muted); }
+.hobby-link-arrow { grid-row: 1 / 3; grid-column: 2; font-size: 17px; color: #5c7466; transition: translate .32s var(--ease); }
+.hobby-links a:is(:hover, :focus-visible) { background: #fff; border-color: #b7cbbf; }
+.hobby-links a:is(:hover, :focus-visible) .hobby-link-arrow { translate: 3px 0; }
+/* 「游戏」折叠块：不进卡片、直接铺背景板——标题行即开关，小箭头随开合旋转。 */
+.hobby-fold { display: grid; gap: 18px; }
+.hobby-fold summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  color: #5c7466;
+}
+.hobby-fold summary::-webkit-details-marker { display: none; }
+.hobby-fold summary:is(:hover, :focus-visible) { color: #33553f; }
+.hobby-fold-arrow { font-size: 16px; line-height: 1; transition: rotate .28s var(--ease); }
+.hobby-fold[open] .hobby-fold-arrow { rotate: 90deg; }
+/* 原比例两端对齐行：逐行定高（横图少放几个），行内图片宽=比例×行高、间隙由 JS 配平。 */
+.hobby-shots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 8px;
+  overflow: hidden;
+}
+.hobby-shots img {
+  display: block;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  max-inline-size: 100%;
+}
+.hobby-shot { margin: 0; min-width: 0; flex: 0 0 auto; }
+.hobby-shot img { inline-size: 100%; block-size: auto; }
+.hobby-shot-name {
+  margin: 7px 2px 0;
+  font-family: 'LXGW WenKai', KaiTi, STKaiti, serif;
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: .04em;
+  text-align: center;
+  color: #52685c;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hobby-links a, .hobby-link-arrow, .hobby-fold-arrow { transition: none !important; }
+}
+@media (max-width: 760px) {
+  .hobby-post { padding: 18px 16px; gap: 14px; }
+  .hobby-avatar { inline-size: 48px; block-size: 48px; border-radius: 11px; }
+  .hobby-title { font-size: 22px; }
+  .hobby-links a { padding: 12px 14px; }
+  .hobby-link-title { font-size: 14px; }
+  .hobby-shots { gap: 5px; }
+}
+
+.about-agents {
+  --agent-width: 20cqw;
+  --agent-slot: clamp(53px, 5vw, 72px);
+  margin-block: clamp(4px, 2vw, 24px) clamp(58px, 8.5vw, 124px);
+}
+.about-agents h2, .about-social-title {
+  margin-block: 0 clamp(18px, 3vw, 37px);
+  font-size: clamp(25px, 3vw, 42px);
+  font-weight: 590;
+  line-height: 1.3;
+  letter-spacing: -.025em;
+}
+.about-agent-window {
+  container-type: inline-size;
+  overflow: clip;
+  touch-action: pan-y pinch-zoom;
+  border-block: 1px solid #354f4019;
+  box-shadow: 0 10px 18px -17px #344f4033;
+}
+.about-agent-track {
+  display: flex;
+  width: max-content;
+  transform: translate3d(calc(-5 * var(--agent-width)), 0, 0);
+}
+.about-agent-set {
+  flex: 0 0 auto;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.about-agent {
+  width: var(--agent-width);
+  min-width: 0;
+  color: #233b31;
+  text-align: center;
+  font-size: clamp(12px, 1.07vw, 16px);
+  font-weight: 650;
+  line-height: 1.35;
+}
+.about-agent a {
+  display: grid;
+  grid-template-rows: var(--agent-slot) minmax(1.35em, auto);
+  place-items: center;
+  align-content: center;
+  gap: clamp(8px, 1.2vw, 16px);
+  min-block-size: clamp(115px, 11vw, 158px);
+  padding: clamp(15px, 2vw, 24px) 6px;
+}
+.about-agent a:focus-visible { outline-offset: -7px; border-radius: 10px; }
+.about-agent a > span:last-child { position: relative; }
+/* 下划线从下往上淡入、离开淡出（不再闪现） */
+.about-agent a > span:last-child::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -.22em;
+  height: 1.5px;
+  border-radius: 1px;
+  background: currentColor;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity .28s var(--ease), transform .34s var(--ease);
+}
+.about-agent a:is(:hover, :focus-visible) > span:last-child::after { opacity: .85; transform: none; }
+.about-agent-window[data-dragging] { cursor: grabbing; user-select: none; }
+.about-agent-window[data-dragging] a { cursor: inherit; }
+.about-agent a:active .about-agent-logo { scale: .95; }
+.about-agent-logo {
+  transition: scale .38s var(--ease), translate .38s var(--ease);
+}
+.about-agent a:is(:hover, :focus-visible) .about-agent-logo { translate: 0 -3px; scale: 1.07; }
+.about-agent-logo {
+  display: grid;
+  place-items: center;
+  width: var(--agent-slot);
+  height: var(--agent-slot);
+}
+.about-agent-logo img {
+  display: block;
+  inline-size: var(--logo-size, 90%);
+  block-size: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  translate: 0 var(--logo-rise, 0px);
+}
+/* Size the visible artwork, accounting for the original icon's transparent margins. */
+.about-agent--codex { --logo-size: 82%; }
+.about-agent--claude-code { --logo-size: 103%; }
+.about-agent--deepseek-harness { --logo-size: 97%; --logo-rise: -1px; }
+.about-agent--pi { --logo-size: 83%; }
+.about-agent--mimo-desktop { --logo-size: 83%; }
+
+.about-social-zone {
+  position: relative;
+  margin-block-end: clamp(70px, 10vw, 142px);
+}
+.about-social-zone::before {
+  content: "";
+  position: absolute;
+  inset: -12% -2% -19%;
+  background: radial-gradient(ellipse 40% 45% at 42% 53%, #dce9dc 0, transparent 100%),
+              radial-gradient(ellipse 34% 45% at 65% 47%, #dfebdf 0, transparent 100%);
+  pointer-events: none;
+}
+.about-social.frosted-glass {
+  --glass-radius: clamp(24px, 2.8vw, 40px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 26px clamp(22px, 6vw, 96px);
+  padding: clamp(18px, 3vw, 42px) clamp(20px, 4vw, 54px);
+  border: 0;
+  background: linear-gradient(148deg, #f5f8f3d6, #e7eee5b8 60%, #e3eee5c4);
+  /* 磨砂卡的“背后”本来就全是自家柔渐变，blur(27px) 像素级等于没画还拖垮滚动帧率——只留轻度降饱和。 */
+  -webkit-backdrop-filter: saturate(.94);
+  backdrop-filter: saturate(.94);
+  box-shadow: 0 3px 9px -6px #293f3220,
+              0 20px 46px -25px #253f313b;
+}
+.about-social.frosted-glass::before {
+  background: radial-gradient(ellipse at var(--social-light-x, 38%) var(--social-light-y, 18%), #fff9, #fff3 32%, transparent 67%);
+}
+.about-social.frosted-glass::after { opacity: .18; }
+.about-social p { margin: 0; max-width: 35em; font-size: clamp(15px, 1.35vw, 17px); line-height: 1.9; color: #304a3b; }
+.about-social figure { margin: 0; line-height: 1.4; }
+.about-qr {
+  display: block;
+  padding: 0;
+  background: transparent;
+  border-radius: 13px;
+  cursor: zoom-in;
+  touch-action: manipulation;
+}
+.about-social .about-qr img {
+  display: block;
+  inline-size: clamp(125px, 13vw, 176px);
+  block-size: auto;
+  background: #fff;
+  border-radius: inherit;
+}
+.about-qr-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 11px;
+  white-space: nowrap;
+  color: #425b4b;
+  font-size: 13px;
+}
+.about-qr-label .ui-icon { transition: translate .35s var(--ease); }
+.about-qr:is(:hover,:focus-visible) .ui-icon { translate: 2px -2px; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .about-social-zone, .hobby-block { perspective: 1400px; }
+  .about-social.frosted-glass,
+  .hobby-post.frosted-glass {
+    transform: rotateX(var(--social-rotate-x, 0deg)) rotateY(var(--social-rotate-y, 0deg));
+    transition: transform .62s var(--ease), box-shadow .5s var(--ease);
+  }
+  .about-social-zone:hover .about-social,
+  .hobby-block:not(#hobby-vision):hover .hobby-post,
+  #hobby-vision .hobby-post:hover { box-shadow: 0 6px 13px -8px #293f322b, 0 26px 49px -26px #253f3145; }
+  .about-social-zone:active .about-social,
+  .hobby-block:not(#hobby-vision):active .hobby-post,
+  #hobby-vision .hobby-post:active,
+  #hobby-vision .hobby-post:has(:active) {
+    transform: rotateX(var(--social-rotate-x, 0deg)) rotateY(var(--social-rotate-y, 0deg)) scale(.988);
+    transition-duration: .18s;
+  }
+}
+
+#image-dialog[data-qr-preview] {
+  --qr-preview-size: min(74vw, 50dvh, 420px);
+  padding: 0;
+  background: rgb(23 34 29 / calc(.76 * var(--photo-veil, 0)));
+}
+#image-dialog[data-qr-preview] .image-stage { height: 100%; }
+#image-dialog[data-qr-preview] #preview-image {
+  inline-size: var(--qr-preview-size);
+  block-size: auto;
+  max-height: none;
+  object-fit: fill;
+  cursor: default;
+  touch-action: auto;
+}
+#image-dialog[data-qr-preview] .preview-caption {
+  inset-block: calc(50% + var(--qr-preview-size) / 2 + 17px) auto;
+  color: #f6f7f0;
+  font-size: 15px;
+}
+
+@media (max-width: 760px) {
+  /* 手机保留传送带：窗口正好一排五个，随页面滚动位移、循环；尺寸收紧。 */
+  .about-agents { --agent-width: calc(100cqw / 4.7); --agent-slot: clamp(36px, 10.5vw, 44px); }
+  .about-agent { font-size: 10.5px; line-height: 1.35; }
+  .about-agent a {
+    grid-template-rows: var(--agent-slot) 2.7em;
+    gap: 5px;
+    min-block-size: 92px;
+    padding: 11px 2px;
+    align-items: start;
+  }
+  .about-agent-logo { inline-size: var(--agent-slot); block-size: var(--agent-slot); }
+}
+@media (max-width: 560px) {
+  .about-social.frosted-glass { gap: 15px; padding: 19px; }
+  .about-social .about-qr img { inline-size: clamp(80px, 25vw, 120px); }
+  .about-social p { font-size: 14px; }
+}
+@media (max-width: 360px) {
+  .about-social.frosted-glass { grid-template-columns: 1fr; gap: 17px; }
+  .about-social figure { justify-self: start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-agent-track { width: auto; transform: none !important; }
+  .about-agent-set[aria-hidden] { display: none; }
+  .about-agent-set:not([aria-hidden]) {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 108px), 1fr));
+  }
+  .about-agent { width: auto; }
+}
+
+/* 霞鹜文楷「金句档」：人名、诗意主张、人物引文用楷体换口气；正文/数据/导航仍走 Manrope 与 HFSandBeach。
+   放在最后一条=压过各处为无衬线调的紧字距（楷体吃不住负字距）。 */
+.hobby-title, .idol-hero h1, .idol-page #voice p,
+.home-album-intro h2, .writing-intro h2, .explorer-intro h2, .studio-copy h2,
+.site-footer .footer-top p {
+  font-family: 'LXGW WenKai', KaiTi, STKaiti, serif;
+  font-weight: 400;
+  letter-spacing: .015em;
+}
+.studio-scroll .studio-copy h2 { letter-spacing: .01em; line-height: 1.42; }
+.explorer-intro h2 { line-height: 1.5; margin-bottom: 20px; }
+.studio-description { line-height: 1.95; margin-bottom: 28px; }
+.explorer-intro > p:not(.section-note) { line-height: 1.95; margin-bottom: 24px; }
+.about-reading h2 { font-family: 'LXGW WenKai', KaiTi, STKaiti, serif; font-weight: 400; letter-spacing: .015em; line-height: 1.65; }
+.journal-intro p { font-family: 'LXGW WenKai', KaiTi, STKaiti, serif; letter-spacing: .01em; line-height: 1.9; }
+.journal-intro .uiv-parrot { --parrot-width: 138px; --parrot-height: 34px; --parrot-size: 11px; align-self: center; }
+@media (max-width: 760px) {
+  .journal-intro .uiv-parrot { align-self: flex-start; }
+}
+/* 手机上图幅完整等比显示：剪影是宽画幅，定高 cover 会裁掉一半。 */
+@media (max-width: 760px) {
+  .about-continuation > .about-panorama { height: auto; }
+  .about-continuation > .about-panorama img { width: 100%; height: auto; object-fit: contain; }
+}
+
+/* 触屏字符场：静态字底 + CSS mask 亮带。mask 动画在合成层跑，避免逐帧 toDataURL 卡到 3fps。 */
+.about-ascii-ring {
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 45%, transparent 0 27%, #000 35% 45%, transparent 53%);
+  mask-image: radial-gradient(ellipse 50% 50% at 50% 45%, transparent 0 27%, #000 35% 45%, transparent 53%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 50% 45%;
+  mask-position: 50% 45%;
+  -webkit-mask-size: 58% 58%;
+  mask-size: 58% 58%;
+  opacity: .9;
+  animation: about-field-ring 9.5s cubic-bezier(.42, 0, .58, 1) infinite alternate;
+}
+@keyframes about-field-ring {
+  from { -webkit-mask-size: 58% 58%; mask-size: 58% 58%; opacity: .35; }
+  to { -webkit-mask-size: 150% 150%; mask-size: 150% 150%; opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-ascii-ring {
+    animation: none;
+    -webkit-mask-size: 112% 112%;
+    mask-size: 112% 112%;
+    opacity: .75;
+  }
+}
+
+/* 传送带停下时对齐到整格，保证静止时窗口里五款都完整、不被切边。 */
+
+/* 社交卡彩蛋：指针处冒字、连点 20 次小型烟花 + 全页卡片震动。 */
+.social-hint {
+  margin: 18px 0 0;
+  text-align: center;
+  font-family: 'LXGW WenKai', KaiTi, STKaiti, serif;
+  font-size: 13px;
+  letter-spacing: .16em;
+  color: #5f7a6b;
+  animation: social-hint-breathe 3.6s ease-in-out infinite;
+}
+@keyframes social-hint-breathe {
+  0%, 100% { opacity: .55; }
+  50% { opacity: .95; }
+}
+.about-social { cursor: pointer; }
+/* 浮字层铺满视口但不吃点击；文字用绝对坐标挂在指针落点。 */
+.social-float-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  pointer-events: none;
+  overflow: hidden;
+}
+.social-plus {
+  position: absolute;
+  font-family: 'LXGW WenKai', KaiTi, STKaiti, serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  color: #244f3e;
+  white-space: nowrap;
+  text-shadow: 0 1px 0 #fffc, 0 8px 20px #1d3a2c33;
+  will-change: transform, opacity;
+}
+.social-plus--jackpot {
+  font-size: 32px;
+  color: #8a5a12;
+  text-shadow: 0 0 1px #fff, 0 2px 0 #fffc, 0 10px 26px #8a5a1645;
+}
+.social-fireworks {
+  position: absolute;
+  pointer-events: none;
+}
+/* 震动只动独立的 translate 属性，不打架卡片自身的 rotateX/rotateY。 */
+.card-quake {
+  animation: card-quake .55s cubic-bezier(.36, .07, .19, .97) both;
+}
+@keyframes card-quake {
+  0%, 100% { translate: 0 0; }
+  10% { translate: -4.5px 3px; }
+  20% { translate: 4.5px -3px; }
+  30% { translate: -3.5px -2.2px; }
+  40% { translate: 3px 2px; }
+  55% { translate: -2.2px 1.4px; }
+  70% { translate: 1.6px -1.1px; }
+  85% { translate: -.8px .5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .social-hint { animation: none; opacity: .8; }
+  .card-quake { animation: none; }
+}
+
+/* 愿景：两张公司卡，和理想型一样常展开；材质/倾斜沿用 hobby-post。 */
+.vision-card { gap: 20px; }
+.vision-head { display: flex; align-items: center; gap: 18px; }
+.vision-logo {
+  flex: none;
+  inline-size: 64px;
+  block-size: 64px;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: inset 0 1px 0 #fff, 0 8px 20px -16px #1d3a2c66;
+}
+.vision-logo img { width: 100%; height: 100%; object-fit: contain; }
+.vision-copy { min-width: 0; }
+.vision-name { margin: 0; font-size: clamp(23px, 2.5vw, 31px); font-weight: 600; letter-spacing: -.025em; line-height: 1.25; }
+.vision-name a { display: inline-flex; align-items: baseline; gap: 11px; color: var(--ink); }
+.vision-name a:is(:hover, :focus-visible) { color: #3d6350; }
+.vision-name a.vision-name-mark-link { align-items: center; gap: 10px; }
+.vision-name-mark { display: block; width: auto; height: clamp(18px, 1.8vw, 22px); transition: opacity .25s var(--ease); }
+.vision-name-mark--google { height: clamp(21px, 2.1vw, 25px); }
+.vision-name a:is(:hover, :focus-visible) .vision-name-mark { opacity: .76; }
+.vision-name-hint { font-size: 12px; font-weight: 500; letter-spacing: .05em; color: #5c7466; }
+.vision-card .vision-tagline {
+  margin: 6px 0 10px;
+  font-family: 'LXGW WenKai', KaiTi, STKaiti, serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #3f5c4a;
+}
+.vision-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 3px 16px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid #dce8df;
+  border-radius: 14px;
+  background: #fff;
+  text-decoration: none;
+  transition: background .3s, border-color .3s;
+}
+.vision-entry-title { grid-row: 1; grid-column: 1; font-size: 15px; font-weight: 600; color: var(--ink); }
+.vision-entry-sub { grid-row: 2; grid-column: 1; font-size: 12px; color: var(--muted); }
+.vision-entry-arrow { grid-row: 1 / 3; grid-column: 2; font-size: 17px; color: #5c7466; transition: translate .32s var(--ease); }
+.vision-entry:is(:hover, :focus-visible) { background: #f4f9f4; border-color: #b7cbbf; }
+.vision-entry:is(:hover, :focus-visible) .vision-entry-arrow { translate: 3px 0; }
+@media (max-width: 760px) {
+  .vision-head { align-items: flex-start; gap: 14px; }
+  .vision-logo { inline-size: 54px; block-size: 54px; padding: 9px; border-radius: 13px; }
+  .vision-name { font-size: 22px; }
+  .vision-entry { padding: 12px 14px; }
+  .vision-entry-sub { font-size: 11px; }
+}
