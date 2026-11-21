@@ -261,7 +261,7 @@ body.is-bar-dragging { user-select: none; }
  .studio-scroll .studio-copy,.studio-scroll.is-project-phase .studio-copy{top:calc(110px - var(--story-progress)*9px)}
  .studio-scroll .studio-copy h1,.studio-scroll.is-project-phase .studio-copy h1{font-size:calc(44px - var(--story-progress)*19px);margin-bottom:calc(12px - var(--story-progress)*4px)}
  .studio-scroll .studio-copy h2,.studio-scroll.is-project-phase .studio-copy h2{font-size:calc(28px - var(--story-progress)*5px);margin-bottom:11px;line-height:1.4}
- .studio-scroll .studio-intro,.studio-scroll.is-project-phase .studio-intro{display:block;max-height:calc(26px*(1 - var(--story-progress)));overflow:hidden;margin-bottom:calc(12px*(1 - var(--story-progress)))}
+ .studio-scroll .studio-intro,.studio-scroll.is-project-phase .studio-intro{display:block;max-height:calc(26px*(1 - var(--story-progress)));overflow:hidden;margin-bottom:calc(12px*(1 - var(--story-progress)))} .studio-scroll .studio-visit,.studio-scroll.is-project-phase .studio-visit{display:flex;min-height:calc(27px*(1 - var(--story-progress)));max-height:calc(34px*(1 - var(--story-progress)));overflow:hidden;margin-bottom:calc(18px*(1 - var(--story-progress)))}
 }
 @media(max-height:650px) and (min-aspect-ratio:1/1){.project-choice{min-height:43px}.project-choice>.app-icon{width:29px;height:29px}}
 

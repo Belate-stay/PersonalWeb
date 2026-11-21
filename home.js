@@ -81,7 +81,7 @@ function noteRows() {
 export function homeMarkup() {
   return `<div class="interactive-home">
     <div class="studio-scroll"><div class="studio-pin"><section class="studio-hero wrap" aria-labelledby="studio-title">
-      <div class="studio-copy"><p class="studio-intro">你好，一个正在探索的计算机学生。</p><h1 id="studio-title">Belate</h1><div class="studio-copy-scenes">${scenes.map(studioCopyScene).join('')}</div></div>
+      <div class="studio-copy"><p class="studio-intro">你好，一个正在探索的计算机学生。</p><visit-count class="studio-visit"><span class="visit-copy">欢迎，你是</span><span class="visit-number"></span><span class="visit-copy">位访客</span></visit-count><h1 id="studio-title">Belate</h1><div class="studio-copy-scenes">${scenes.map(studioCopyScene).join('')}</div></div>
       <div class="studio-space">
         <div id="studio-preview" class="water-scene" role="tabpanel" aria-labelledby="project-choice-photography"><img class="water-fallback" src="${asset('photo-bicycle-2200.webp')}" alt="展厅里的自行车与纸页" draggable="false"><div class="water-canvas"></div></div>
         <div class="project-switch" role="tablist" aria-label="切换首屏画面">

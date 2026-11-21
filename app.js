@@ -11,6 +11,7 @@ import { initInteractions, showToast, syncNavigation } from './interactions.js';
 import { mountPhotoViewer, photoDetailHref, mountTileEntrance, mountPhotoFilters } from './photography.js';
 import { createPhotoPainter, movePhoto, photoBox, photoClip, photoFrame, photoTrack, showPhotoDialog } from './photo-motion.js';
 import { mountAbout } from './about.js';
+import './visits.js';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];

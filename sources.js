@@ -32,6 +32,7 @@ export const sourceGroups = [
       { name: 'VS Code', url: 'https://code.visualstudio.com/' },
       { name: 'Git', url: 'https://git-scm.com/' },
       { name: '不蒜子', url: 'https://busuanzi.ibruce.info/' },
+      { name: 'Vercount', url: 'https://vercount.one/' },
       { name: 'Simple Icons', url: 'https://simpleicons.org/' },
       { name: 'Uiverse', url: 'https://uiverse.io/' },
     ],
